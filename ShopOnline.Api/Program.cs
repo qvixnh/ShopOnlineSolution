@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShopOnline.Api.Data;
+using ShopOnline.Api.Repositories;
+using ShopOnline.Api.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextPool<ShopOnlineDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ShopOnlineConnection"))
 );
+
+//implement the code to register the product repository  with the dependency injection system
+//using add trasient would mean that a new instance of the relevant object provided to every class that required the relevant object to be injected
+//AddScope = 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//app building
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
