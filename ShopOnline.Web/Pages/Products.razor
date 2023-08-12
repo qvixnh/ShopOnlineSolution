@@ -1,7 +1,6 @@
 ﻿@page "/"
 @using ShopOnline.Models.Dtos;
 @inherits ProductsBase
-<h3>Products</h3>
 
 @if(Products==null){
     <h3>Loading products....</h3>
@@ -11,18 +10,15 @@
     var productsCount = Products.Count(); 
     @if(productsCount > 0)
     {
-        const int itemsPerRow = 4;
-        var productRowList = new List<ProductDto>();
         
-        @for (int i = 0; i < productsCount; i++)
+        @foreach (var prodGroup in GetGroupedProductsByCategory())
         {
-            //skip the first i * itemsPerRow elements of the Products collection
-            //This is done so that the productRowList variable will only contain the elements of the Products collection 
-            //that are starting from the i * itemsPerRow element.
-            productRowList = Products.Skip(i * itemsPerRow).Take(itemsPerRow).ToList();
+            <h4>@GetCategoryName(prodGroup)</h4>
             <div class=" row mt-3">
-                <DisplayProducts Products="@productRowList"></DisplayProducts>
+                <DisplayProducts Products="@prodGroup"></DisplayProducts>
             </div>
+            <hr class="mb-3"/>
         }
+       
     }
 }
