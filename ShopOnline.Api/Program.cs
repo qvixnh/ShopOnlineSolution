@@ -24,6 +24,8 @@ builder.Services.AddDbContextPool<ShopOnlineDbContext>(options =>
 //using add trasient would mean that a new instance of the relevant object provided to every class that required the relevant object to be injected
 //AddScope = 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+
 //app building
 var app = builder.Build();
 
