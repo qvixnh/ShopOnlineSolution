@@ -11,5 +11,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 
 //-regist service class for dependencies injection
 builder.Services.AddScoped<IProductService,ProductService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 await builder.Build().RunAsync();
