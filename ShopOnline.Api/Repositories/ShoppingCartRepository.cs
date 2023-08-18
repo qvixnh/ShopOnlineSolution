@@ -69,8 +69,7 @@ namespace ShopOnline.Api.Repositories
         {
             return await (from cart in this.shopOnlineDbContext.Carts
                           join cartItem in this.shopOnlineDbContext.CartItems
-                          on cart.Id equals cartItem.CartId
-                          where cart.UserId == userId
+                          on cart.Id equals cartItem.CartId where cart.UserId == userId
                           select new CartItem
                           {
                               Id = cartItem.Id,

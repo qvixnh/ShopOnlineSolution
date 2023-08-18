@@ -18,7 +18,7 @@ namespace ShopOnline.Api.Extensions
                         ImageURL = product.ImageURL,
                         Price = product.Price,
                         Qty = product.Qty,
-                        CategoryId = product.CategoryId,
+                        CategoryId = product.ProductCategory.Id,
                         CategoryName = productCategory.Name
                     }).ToList();
         }
@@ -32,8 +32,8 @@ namespace ShopOnline.Api.Extensions
                         ImageURL = product.ImageURL,
                         Price = product.Price,
                         Qty = product.Qty,
-                        CategoryId = product.CategoryId,
-                        CategoryName = productCategory.Name
+                        CategoryId = product.ProductCategory.Id,
+                        CategoryName = product.ProductCategory.Name
                     };
         }
 
@@ -42,11 +42,11 @@ namespace ShopOnline.Api.Extensions
         {
             return (from cartItem in cartItems
                     join product in products
-                    on cartItem.Id equals product.Id
+                    on cartItem.ProductId equals product.Id
                     select new CartItemDto
                     {
                         Id = cartItem.Id,
-                        ProductId = product.Id,
+                        ProductId = cartItem.ProductId,
                         ProductName = product.Name,
                         ProductDescription = product.Description,
                         ProductImageURL = product.ImageURL,
@@ -63,7 +63,7 @@ namespace ShopOnline.Api.Extensions
             return  new CartItemDto
                     {
                         Id = cartItem.Id,
-                        ProductId = product.Id,
+                        ProductId = cartItem.ProductId,
                         ProductName = product.Name,
                         ProductDescription = product.Description,
                         ProductImageURL = product.ImageURL,
