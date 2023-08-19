@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using ShopOnline.Models.Dtos;
 using ShopOnline.Web.Services.Contracts;
 
@@ -9,6 +10,8 @@ namespace ShopOnline.Web.Pages
         [Inject]
         public IShoppingCartService ShoppingCartService { get; set; }
 
+        [Inject]
+        public IJSRuntime Js { get; set; }  //call js within blazor component 
         public List<CartItemDto> ShoppingCartItems { get; set; } //IEnumerable can not remove item from client side collection -> list
         public string ErrorMessage { get; set; }
 
@@ -44,13 +47,22 @@ namespace ShopOnline.Web.Pages
                 item.TotalPrice = cartItemDto.Price * cartItemDto.Qty; 
             }
         }
-
+        //visible display for qty udpating button
+        protected async Task UpdateQty_Input(int id)
+        {
+            await MakeUpdateQtyButtonVisible(id, true);
+        }
+        private async Task MakeUpdateQtyButtonVisible(int id, bool visible)
+        {
+            await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
+        }
         //handle deleting cart item
         protected async Task DeleteCartItem_Click(int id)
         {
             var cartItemDto = await ShoppingCartService.DeleteItem(id);
             RemoveCartItem(id);
             CalculateCartSummmaryTotals();
+
         }
         private CartItemDto GetCartItem(int id)
         {
@@ -80,6 +92,8 @@ namespace ShopOnline.Web.Pages
                     var returnedUpateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
                     UpdateItemTotalPrice(returnedUpateItemDto);
                     CalculateCartSummmaryTotals();
+                    await MakeUpdateQtyButtonVisible(id, false);
+
                 }
                 else
                 {
