@@ -22,8 +22,8 @@ namespace ShopOnline.Web.Pages
             try
             {
 
-                    ShoppingCartItems = await ShoppingCartService.GetItems(HardCoded.UserId);
-                CalculateCartSummmaryTotals();
+                ShoppingCartItems = await ShoppingCartService.GetItems(HardCoded.UserId);
+                CartChanged();
             }
             catch (Exception ex)
             {
@@ -56,12 +56,23 @@ namespace ShopOnline.Web.Pages
         {
             await Js.InvokeVoidAsync("MakeUpdateQtyButtonVisible", id, visible);
         }
+        //handgle the cart button
+        private void CartChanged()
+        {
+            CalculateCartSummmaryTotals();
+            ShoppingCartService.RaiseEventOnShoppingCartChanged(TotalQuantity);
+        }
+        private void CalculateCartSummmaryTotals()
+        {
+            SetTotalPrice();
+            SetTotalQuantity();
+        }
         //handle deleting cart item
         protected async Task DeleteCartItem_Click(int id)
         {
             var cartItemDto = await ShoppingCartService.DeleteItem(id);
             RemoveCartItem(id);
-            CalculateCartSummmaryTotals();
+            CartChanged();
 
         }
         private CartItemDto GetCartItem(int id)
@@ -73,11 +84,7 @@ namespace ShopOnline.Web.Pages
             var cartItemDto = GetCartItem(id);
             ShoppingCartItems.Remove(cartItemDto);
         }
-        private void CalculateCartSummmaryTotals()
-        {
-            SetTotalPrice();
-            SetTotalQuantity();
-        }
+        
         protected async Task UpdateQtyCartItem_Click(int id, int qty)
         {
             try
@@ -91,7 +98,7 @@ namespace ShopOnline.Web.Pages
                     };
                     var returnedUpateItemDto = await this.ShoppingCartService.UpdateQty(updateItemDto);
                     UpdateItemTotalPrice(returnedUpateItemDto);
-                    CalculateCartSummmaryTotals();
+                    CartChanged();
                     await MakeUpdateQtyButtonVisible(id, false);
 
                 }

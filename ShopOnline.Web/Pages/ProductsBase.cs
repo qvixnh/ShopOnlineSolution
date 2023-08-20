@@ -8,10 +8,27 @@ namespace ShopOnline.Web.Pages
     {
         [Inject]// inject a dependency into the ProductService property
         public IProductService ProductService { get; set; }
+        [Inject]
+        public IShoppingCartService ShoppingCartService { get; set; }  
         public IEnumerable<ProductDto> Products { get; set; }
+        public string ErrorMessage { get; set; }
         protected override async Task OnInitializedAsync()//life cycle events on microsoft .net web page
         {
-            Products = await ProductService.GetItems();
+            try
+            {
+                Products = await ProductService.GetItems();
+                //show how many items are stored 
+                var shoppingCartItems = await ShoppingCartService.GetItems(HardCoded.UserId);
+                var totalQty = shoppingCartItems.Sum(i => i.Qty);
+
+                ShoppingCartService.RaiseEventOnShoppingCartChanged(totalQty);
+                
+            }
+            catch (Exception ex)
+            {
+
+                ErrorMessage = ex.Message;
+            }
         }
         protected IOrderedEnumerable<IGrouping<int, ProductDto>> GetGroupedProductsByCategory()
         {

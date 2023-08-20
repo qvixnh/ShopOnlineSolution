@@ -14,6 +14,9 @@ namespace ShopOnline.Web.Services.Contracts
         {
             this.httpClient = httpClient;
         }
+
+        public event Action<int> OnShoppingCartChanged;
+
         public async Task<CartItemDto> AddItem(CartItemToAddDto cartItemToAddDto)
         {
             try
@@ -87,6 +90,16 @@ namespace ShopOnline.Web.Services.Contracts
 
                 throw;
             }
+        }
+
+        public void RaiseEventOnShoppingCartChanged(int totalQty)
+        {
+            if(OnShoppingCartChanged != null) // event has subscribers 
+            {
+                //raise event to those subscribers
+                OnShoppingCartChanged.Invoke(totalQty);
+            }
+
         }
 
         public async Task<CartItemDto> UpdateQty(CartItemQtyUpdateDto cartItemQtyUpdateDto)
