@@ -38,10 +38,12 @@ namespace ShopOnline.Api.Repositories
             return products;
         }
 
-        public  Task<IEnumerable<Product>> GetItemsByCategory(int id)
+        public  async Task<IEnumerable<Product>> GetItemsByCategory(int id)
         {
-            throw new NotImplementedException();
-
+            var products = await (from product in shopOnlineDbContext.Products
+                                  where product.CategoryId == id
+                                  select product).ToListAsync();
+            return products;
 
         }
 

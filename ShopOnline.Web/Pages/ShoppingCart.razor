@@ -2,7 +2,7 @@
 @inherits ShoppingCartBase
 @if (ShoppingCartItems == null && ErrorMessage == null)
 {
-    <h3>Load cart items..........</h3>
+    <DisplaySpinner/>
 }
 else if(ErrorMessage !=null){
     <DisplayError ErrorMessage="@ErrorMessage"></DisplayError>
