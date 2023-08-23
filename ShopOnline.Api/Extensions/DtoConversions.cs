@@ -15,11 +15,9 @@ namespace ShopOnline.Api.Extensions
                         IconCSS = productCategory.IconCSS,
                     }).ToList();
         }
-        public static IEnumerable<ProductDto> ConvertToDto(this IEnumerable<Product> products, IEnumerable<ProductCategory> productCategories)
+        public static IEnumerable<ProductDto> ConvertToDto(this IEnumerable<Product> products )
         {
             return (from product in products
-                    join productCategory in productCategories
-                    on product.CategoryId equals productCategory.Id
                     select new ProductDto
                     {
                         Id = product.Id,
@@ -29,10 +27,10 @@ namespace ShopOnline.Api.Extensions
                         Price = product.Price,
                         Qty = product.Qty,
                         CategoryId = product.ProductCategory.Id,
-                        CategoryName = productCategory.Name
+                        CategoryName = product.ProductCategory.Name
                     }).ToList();
         }
-        public static ProductDto ConvertToDto(this Product product,ProductCategory productCategory)
+        public static ProductDto ConvertToDto(this Product product)
         {
             return new ProductDto
                     {
